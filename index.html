@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazioni</title>
     <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/fullcalendar@5.10.1/main.css' rel='stylesheet' />
+    <script src='https://unpkg.com/fullcalendar@5.10.1/main.js'></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
 </head>
 <body>
     <h1>Prenota il tuo appuntamento</h1>
@@ -14,30 +18,33 @@
         <input type="time" id="time" required>
         <button type="submit">Prenota</button>
     </form>
-    <ul id="bookings-list"></ul>
+    
+    <h2>Prenotazioni</h2>
+    <div id="calendar"></div>
 
     <script type="module">
-        // Importa i moduli Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-
         // Configura Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyBDdGFNd6wOWriEKqdvIYH_MJUiEFgm0kg",
-  authDomain: "appprenotazioni-39124.firebaseapp.com",
-  projectId: "appprenotazioni-39124",
-  storageBucket: "appprenotazioni-39124.appspot.com",
-  messagingSenderId: "805142279364",
-  appId: "1:805142279364:web:1f651f44e9de1e5e6cc591"
-};
+            apiKey: "AIzaSyBDdGFNd6wOWriEKqdvIYH_MJUiEFgm0kg",
+            authDomain: "appprenotazioni-39124.firebaseapp.com",
+            projectId: "appprenotazioni-39124",
+            storageBucket: "appprenotazioni-39124.appspot.com",
+            messagingSenderId: "805142279364",
+            appId: "1:805142279364:web:1f651f44e9de1e5e6cc591"
+        };
+
 
         // Inizializza Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js';
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Riferimenti agli elementi DOM
         const form = document.getElementById('booking-form');
-        const bookingsList = document.getElementById('bookings-list');
 
+        // Aggiungi un evento di submit al modulo
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -45,33 +52,43 @@
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
 
-            try {
-                // Salva la prenotazione in Firestore
-                await addDoc(collection(db, "bookings"), {
-                    name: name,
-                    date: date,
-                    time: time
-                });
-                console.log('Prenotazione salvata con successo!');
-                form.reset();
-                loadBookings();
-            } catch (error) {
-                console.error('Errore nel salvataggio della prenotazione:', error);
-            }
+            // Salva la prenotazione in Firestore
+            await addDoc(collection(db, 'bookings'), {
+                name: name,
+                date: date,
+                time: time
+            });
+
+            // Azzera il modulo
+            form.reset();
+
+            // Aggiorna il calendario
+            loadBookings();
         });
 
+        // Funzione per caricare le prenotazioni nel calendario
         const loadBookings = async () => {
-            bookingsList.innerHTML = '';
-
-            const snapshot = await getDocs(collection(db, "bookings"));
+            const bookings = [];
+            const snapshot = await getDocs(collection(db, 'bookings'));
             snapshot.forEach(doc => {
                 const booking = doc.data();
-                const li = document.createElement('li');
-                li.textContent = `${booking.name} - ${booking.date} alle ${booking.time}`;
-                bookingsList.appendChild(li);
+                bookings.push({
+                    title: booking.name,
+                    start: `${booking.date}T${booking.time}:00`, // Formato ISO 8601
+                });
             });
+
+            // Inizializza il calendario
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: bookings,
+            });
+
+            calendar.render();
         };
 
+        // Carica le prenotazioni all'avvio
         loadBookings();
     </script>
 </body>

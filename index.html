@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="it">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
+    <nav>
+        <a href="/index.html">Home</a> <a href="">|</a> <a href="/prenotazioni.html" class="navbar">Prenotazioni</a>
+    </nav>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazioni</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="style" />
     <link href='https://unpkg.com/fullcalendar@5.10.1/main.css' rel='stylesheet' />
     <script src='https://unpkg.com/fullcalendar@5.10.1/main.js'></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </head>
 <body>
     <h1>Prenota il tuo appuntamento</h1>
@@ -18,9 +24,6 @@
         <input type="time" id="time" required>
         <button type="submit">Prenota</button>
     </form>
-    
-    <h2>Prenotazioni</h2>
-    <div id="calendar"></div>
 
     <script type="module">
         // Configura Firebase
@@ -77,16 +80,6 @@
                     start: `${booking.date}T${booking.time}:00`, // Formato ISO 8601
                 });
             });
-
-            // Inizializza il calendario
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: bookings,
-            });
-
-            calendar.render();
-        };
 
         // Carica le prenotazioni all'avvio
         loadBookings();

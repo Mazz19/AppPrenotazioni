@@ -2,9 +2,6 @@
 <html lang="it">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
-    <nav>
-        <a href="https://mazz19.github.io/AppPrenotazioni/index.html">Home</a><a href="">|</a><a href="https://mazz19.github.io/AppPrenotazioni/prenotazioni.html" class="navbar">Prenotazioni</a>
-    </nav>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazioni</title>
@@ -65,5 +62,37 @@
         // Carica le prenotazioni all'avvio
         loadBookings();
     </script>
+
+<nav class="nav">
+    <input id="menu" type="checkbox">
+    <label for="menu">Menu</label>
+    <ul class="menu">
+      <li>
+        <a href="/Prenotazioni/index.html">
+          <span>Home</span>
+          <i class="fas fa-address-card" aria-hidden="true"></i>
+        </a>
+      </li>
+      <li>
+        <a href="/Prenotazioni/prenotazioni.html">
+          <span>Prenota</span>
+          <i class="fas fa-tasks" aria-hidden="false"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#0">
+          <span>Chi Siamo</span>
+          <i class="fas fa-users" aria-hidden="true"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#0">
+          <span>Contatti</span>
+          <i class="fas fa-envelope-open-text" aria-hidden="true"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
 </body>
 </html>
